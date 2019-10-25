@@ -1,4 +1,5 @@
 *.swp
+ngrok
 venv/*
 config.yml
 __pycache__/*
