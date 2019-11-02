@@ -1,57 +1,121 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='favicon.ico') }}"
+    />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
     <title>Index</title>
     <style>
-        .center {
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-            width: 35%;
-        }
+      .center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 35%;
+      }
 
-        .speech input {border: 0; width: 240px; display: inline-block; height: 30px;}
-        .speech img {float: right; width: 40px }
+      .speech input {
+        border: 0;
+        width: 240px;
+        display: inline-block;
+        height: 30px;
+      }
+      .speech img {
+        float: right;
+        width: 40px;
+      }
     </style>
 
     <script>
       function startDictation() {
-    
         if (window.hasOwnProperty('webkitSpeechRecognition')) {
-    
           var recognition = new webkitSpeechRecognition();
-    
+
           recognition.continuous = false;
           recognition.interimResults = false;
-    
-          recognition.lang = "id";
+
+          recognition.lang = 'id';
           recognition.start();
-    
+
           recognition.onresult = function(e) {
-            document.getElementById('transcript').value
-                                     = e.results[0][0].transcript;
+            document.getElementById('transcript').value =
+              e.results[0][0].transcript;
             recognition.stop();
             document.getElementById('labnol').submit();
           };
-    
+
           recognition.onerror = function(e) {
             recognition.stop();
-          }
-    
+          };
         }
       }
     </script>
+  </head>
+  <body>
+    <div class="w3-content w3-section center" style="max-width:1000px">
+      {% for image in user_image[1] %}
+      <img
+        class="mySlides"
+        src="{{ user_image[0] + image }}"
+        style="width:100%"
+      />
+      {% endfor %}
 
-</head>
-<body>
-    <img src="{{ user_image }}" alt="User Image" class="center">
+      <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">
+        &#10094;
+      </button>
+      <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">
+        &#10095;
+      </button>
+    </div>
+
     <form id="labnol" method="post" action="{{ url_for('handle_data') }}">
       <div class="speech">
         <input type="hidden" name="q" id="transcript" placeholder="Speak" />
         <img onclick="startDictation()" src="//i.imgur.com/cHidSVu.gif" />
       </div>
     </form>
-</body>
+
+    <script>
+      var myIndex = 0;
+      carousel();
+
+      function carousel() {
+        var i;
+        var x = document.getElementsByClassName('mySlides');
+        for (i = 0; i < x.length; i++) {
+          x[i].style.display = 'none';
+        }
+        myIndex++;
+        if (myIndex > x.length) {
+          myIndex = 1;
+        }
+        x[myIndex - 1].style.display = 'block';
+        setTimeout(carousel, 5000); // Change image every 5 seconds
+      }
+
+      var slideIndex = 1;
+      showDivs(slideIndex);
+
+      function plusDivs(n) {
+        showDivs((slideIndex += n));
+      }
+
+      function showDivs(n) {
+        var i;
+        var x = document.getElementsByClassName('mySlides');
+        if (n > x.length) {
+          slideIndex = 1;
+        }
+        if (n < 1) {
+          slideIndex = x.length;
+        }
+        for (i = 0; i < x.length; i++) {
+          x[i].style.display = 'none';
+        }
+        x[slideIndex - 1].style.display = 'block';
+      }
+    </script>
+  </body>
 </html>
-
-
