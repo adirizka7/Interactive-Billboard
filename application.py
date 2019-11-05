@@ -6,7 +6,7 @@ from flask import Flask, render_template, request, send_from_directory
 from config import cfg
 
 PEOPLE_FOLDER = os.path.join('static', 'Photos')
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = PEOPLE_FOLDER
@@ -20,7 +20,6 @@ def show_index(image_folder):
 
     image_folder = os.path.join(app.config['UPLOAD_FOLDER'] + '/' + image_folder)
     images = os.listdir(image_folder)
-    print(images)
     return render_template("index.html", user_image = [image_folder, images])
 
 @app.route('/', methods=['POST', 'GET'])
@@ -48,6 +47,7 @@ def handle_data():
                 maxi = s[entities][0]['score']
                 intent = [entities]
 
+        print(intent)
         logging.info('Intent extracted : {}'.format(intent))
 
         return show_index(intent[0] + '/') if len(intent) else show_index('')
